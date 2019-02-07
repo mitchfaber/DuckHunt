@@ -9,8 +9,7 @@
         "AssetManager":false,
         "Mover":false,
         "MoverDiagonal":false,
-        "Snake":false,
-        "Bug":false,
-        "UserInterface":false
+        "GameScreen":false,
+        "Dog":false
     }
 }

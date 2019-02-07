@@ -77,7 +77,7 @@ class Mover {
             } else if (this._direction == Mover.UP) {
                 // moving up
                 sprite.scaleX = 1;
-                sprite.rotation = 90;
+                // sprite.rotation = 90;
                 sprite.y = sprite.y - this._speed;
                 if (sprite.y < -width) {
                     sprite.y = this._stage.canvas.height;
@@ -87,7 +87,7 @@ class Mover {
             } else if (this._direction == Mover.DOWN) {
                 // moving down
                 sprite.scaleX = 1;
-                sprite.rotation = -90;
+                // sprite.rotation = -90;
                 sprite.y = sprite.y + this._speed;
                 if (sprite.y > (this._stage.canvas.height + width)) {
                     sprite.y = -width;

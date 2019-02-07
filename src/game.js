@@ -13,20 +13,27 @@
     const DUCK_MAX = 10;
     // a pool of preloaded ducks to come out
     let duckPool = [];
+    // keep track of what round you're on.
+    let roundNum = 1;
     
-
     let assetManager;
-    let background;
+    let gameScreen;
+    let duck;
+    let dog;
 
     function onReady(e) {
         console.log(">> setup");
 
         // getting background sprite for stage
-        background = assetManager.getSprite("spritesheet");
-        background.gotoAndStop("stage");
-        background.x = 600;
-        background.y = 300;
-        stage.addChild(background);
+        gameScreen = new GameScreen(stage, assetManager);
+        dog = new Dog(stage, assetManager);
+        dog.laugh();
+
+        // duck = assetManager.getSprite("spritesheet");
+        // duck.gotoAndPlay("laughing");
+        // duck.x = 600;
+        // duck.y = 350;
+        // stage.addChildAt(duck, 0);
 
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
@@ -34,6 +41,8 @@
     }
 
     function onTick(e) {
+        document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
+        dog.enterLaugh();
         stage.update();
     }
 
@@ -44,9 +53,10 @@
         canvas = document.getElementById("myCanvas");
         // set canvas to as wide/high as the browser window
         canvas.width = 1200;
-        canvas.height = 700;
+        canvas.height = 650;
         // create stage object
         stage = new createjs.StageGL(canvas);
+        stage.setClearColor("#33ABF9");
         stage.enableMouseOver(10);
 
         // construct preloader object to load spritesheet and sound assets
