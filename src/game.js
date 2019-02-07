@@ -17,6 +17,7 @@
     let roundNum = 1;
     
     let assetManager;
+    let titleScreen;
     let gameScreen;
     let duck;
     let dog;
@@ -25,24 +26,27 @@
         console.log(">> setup");
 
         // getting background sprite for stage
-        gameScreen = new GameScreen(stage, assetManager);
-        dog = new Dog(stage, assetManager);
-        dog.laugh();
-
-        // duck = assetManager.getSprite("spritesheet");
-        // duck.gotoAndPlay("laughing");
-        // duck.x = 600;
-        // duck.y = 350;
-        // stage.addChildAt(duck, 0);
+        titleScreen = new TitleScreen(stage, assetManager);
 
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
 
     }
 
+    function onStart(e) {
+        gameScreen = new GameScreen(stage, assetManager);
+        dog = new Dog(stage, assetManager);
+        
+    }
+
+    function roundEnd() {
+        dog.enterLaugh();
+        dog.laugh();
+    }
+
     function onTick(e) {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
-        dog.enterLaugh();
+        
         stage.update();
     }
 
@@ -56,7 +60,7 @@
         canvas.height = 650;
         // create stage object
         stage = new createjs.StageGL(canvas);
-        stage.setClearColor("#33ABF9");
+        stage.setClearColor("#000000");
         stage.enableMouseOver(10);
 
         // construct preloader object to load spritesheet and sound assets

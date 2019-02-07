@@ -18,9 +18,14 @@ class GameScreen {
         this._grass.gotoAndStop("grass");
         this._grass.x = 600;
         this._grass.y = 460;
+        this._tree = assetManager.getSprite("spritesheet");
+        this._tree.gotoAndStop("tree");
+        this._tree.x = 300;
+        this._tree.y = 460;
         this._stage.addChildAt(this._ground, 0);
         this._stage.addChildAt(this._grass, 1);
-        this._stage.addChildAt(this._scoreTracker, 2);
-        this._stage.addChildAt(this._txtScore, 3);
+        this._stage.addChildAt(this._tree, 2);
+        this._stage.addChildAt(this._scoreTracker, 3);
+        this._stage.addChildAt(this._txtScore, 4);
     }
 }

@@ -35,6 +35,4 @@ class Dog {
         } 
         this.dog.mover.update();
     }
-
-
 }
