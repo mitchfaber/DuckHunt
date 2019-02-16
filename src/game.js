@@ -26,17 +26,19 @@
         console.log(">> setup");
 
         // getting background sprite for stage
-        titleScreen = new TitleScreen(stage, assetManager);
-
+        // titleScreen = new TitleScreen(stage, assetManager);
+        gameScreen = new GameScreen(stage, assetManager);
+        dog = new Dog(stage, assetManager);
+        // titleScreen.getBackground.on("click", onStart);
+        // titleScreen.on("click", onStart);
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
-
+        onStart();
     }
 
     function onStart(e) {
-        gameScreen = new GameScreen(stage, assetManager);
-        dog = new Dog(stage, assetManager);
-        
+        console.log("clicked!");
+        gameScreen.roundStart();
     }
 
     function roundEnd() {
@@ -46,6 +48,8 @@
 
     function onTick(e) {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
+        // titleScreen.titleSlide();
+        gameScreen.roundStart();
         
         stage.update();
     }
@@ -55,16 +59,15 @@
 
         // get reference to canvas
         canvas = document.getElementById("myCanvas");
-        // set canvas to as wide/high as the browser window
         canvas.width = 1200;
         canvas.height = 650;
         // create stage object
         stage = new createjs.StageGL(canvas);
-        stage.setClearColor("#000000");
         stage.enableMouseOver(10);
 
         // construct preloader object to load spritesheet and sound assets
         assetManager = new AssetManager(stage);
+        
         stage.on("allAssetsLoaded", onReady);
         // load the assets
         assetManager.loadAssets(manifest);

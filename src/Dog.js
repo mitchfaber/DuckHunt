@@ -3,36 +3,45 @@ class Dog {
     constructor(stage, assetManager) {
         this._stage = stage;
         this._assetManager = assetManager;
-        this.dog = this._assetManager.getSprite("spritesheet");
-        this.dog.x = 600;
-        this.dog.y = 500;
-        this._stage.addChildAt(this.dog, 0);
+        this._sprite = this._assetManager.getSprite("spritesheet");
+        this._sprite.x = 600;
+        this._sprite.y = 500;
         this.timer = 0;
     }
 
     laugh() {
-        this.dog.mover = new Mover(this.dog, this._stage);
-        this.dog.mover.speed = 5;
-        this.dog.gotoAndPlay("laughing");
-        this.dog.mover.startMe();
-        
-        
+        this._sprite.mover = new Mover(this._sprite, this._stage);
+        this._sprite.mover.speed = 5;
+        this._sprite.gotoAndPlay("laughing");
+        this._sprite.mover.startMe();
     }
 
     enterLaugh() {
         this.timer++;
-        if (this.dog.y <= 300) {
-            this.dog.mover.speed = 0;
+        if (this._sprite.y <= 300) {
+            this._sprite.mover.speed = 0;
         } else {
-            this.dog.mover.direction = Mover.UP;
+            this._sprite.mover.direction = Mover.UP;
         }
         if (this.timer >= 120) {
-            this.dog.mover.direction = Mover.DOWN;
-            this.dog.mover.speed = 5;
-            if (this.dog.y >= 500) {
-                this._stage.removeChild(this.dog);
+            this._sprite.mover.direction = Mover.DOWN;
+            this._sprite.mover.speed = 5;
+            if (this._sprite.y >= 500) {
+                this._stage.removeChild(this._sprite);
             }
         } 
-        this.dog.mover.update();
+        this._sprite.mover.update();
+    }
+
+    roundStart() {
+        this._sprite = this._assetManager.getSprite("spritesheet");
+        this._sprite.gotoAndStop("dogJump");
+        this.x = 0;
+        this.y = 400;
+        this._sprite.mover = new MoverDiagonal(this._sprite,this._stage);
+        this._sprite.mover.speed = 3;
+        this._stage.addChild(this._sprite);
+        this._sprite.mover.startMe();
+        this._sprite.mover.update();
     }
 }

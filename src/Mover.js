@@ -66,7 +66,7 @@ class Mover {
 
             } else if (this._direction == Mover.RIGHT) {
                 // moving right
-                sprite.scaleX = -1;
+                // sprite.scaleX = -1;
                 sprite.rotation = 0;
                 sprite.x = sprite.x + this._speed;
                 if (sprite.x > (this._stage.canvas.width + width)) {
