@@ -57,7 +57,7 @@ class GameScreen {
             this._round.mover.direction = Mover.UP;
             this._round.mover.startMe();
         } else if (this._round.y <= -60) {
-            this._stage.removeChild(this._round);
+            this._round.mover.speed = 0;
             this._dog.roundStart();
         }
         this._round.mover.update();

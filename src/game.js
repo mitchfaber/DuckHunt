@@ -49,8 +49,8 @@
     function onTick(e) {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
         // titleScreen.titleSlide();
-        gameScreen.roundStart();
-        
+        // gameScreen.roundStart();
+        dog.roundStart();
         stage.update();
     }
 
