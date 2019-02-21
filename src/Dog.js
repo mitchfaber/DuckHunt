@@ -7,6 +7,7 @@ class Dog {
         this._sprite.x = 600;
         this._sprite.y = 500;
         this.timer = 0;
+        this._gamePhase = 1;
     }
 
     laugh() {
@@ -36,12 +37,33 @@ class Dog {
     roundStart() {
         this._sprite = this._assetManager.getSprite("spritesheet");
         this._sprite.gotoAndStop("dogJump");
-        this.x = 0;
-        this.y = 400;
-        this._sprite.mover = new MoverDiagonal(this._sprite,this._stage);
-        this._sprite.mover.speed = 3;
+        this._sprite.x = 50;
+        this._sprite.y = 430;
         this._stage.addChild(this._sprite);
+        this._sprite.mover = new MoverDiagonal(this._sprite,this._stage);
+        this._sprite.mover.speed = 5;
+        this._sprite.rotation = -10;
         this._sprite.mover.startMe();
-        this._sprite.mover.update();
+    }
+
+    setupMe() {
+        if (this._gamePhase == 1) {
+            this.roundStart();
+        }
+    }
+
+    updateMe() {
+        if (this._gamePhase == 1 && this._sprite.y <= 440 && this._sprite.y >= 400) {
+            this._sprite.mover.update();
+        } else if (this._sprite.y <= 400) {
+            this._sprite.mover.stopMe();
+            this._sprite.rotation = 10;
+            this._sprite.mover.startMe();
+            this._sprite.mover.update();
+        } else if (this._gamePhase == 1 && this._sprite.y >= 440) {
+            this._sprite.gotoAndStop("dogFound");
+            this._sprite.rotation = 0;
+        }
+        
     }
 }

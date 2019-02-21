@@ -21,24 +21,27 @@
     let gameScreen;
     let duck;
     let dog;
+    let gamePhase;
 
     function onReady(e) {
         console.log(">> setup");
 
         // getting background sprite for stage
-        // titleScreen = new TitleScreen(stage, assetManager);
-        gameScreen = new GameScreen(stage, assetManager);
+        titleScreen = new TitleScreen(stage, assetManager);
         dog = new Dog(stage, assetManager);
-        // titleScreen.getBackground.on("click", onStart);
-        // titleScreen.on("click", onStart);
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
-        onStart();
+        // onStart();
+    }
+
+    function setupGame() {
+        gameScreen = new GameScreen(stage, assetManager);
     }
 
     function onStart(e) {
         console.log("clicked!");
         gameScreen.roundStart();
+        dog.setupMe();
     }
 
     function roundEnd() {
@@ -48,9 +51,19 @@
 
     function onTick(e) {
         document.getElementById("fps").innerHTML = createjs.Ticker.getMeasuredFPS();
-        // titleScreen.titleSlide();
-        // gameScreen.roundStart();
-        dog.roundStart();
+        if (gamePhase == 0) {
+            titleScreen.titleSlide();
+            stage.on("startGame", () => {
+                stage.removeAllChildren();
+                setupGame();
+                gamePhase = 1;
+            });
+        } else if (gamePhase == 1) {
+            gameScreen.roundStart();
+        }
+        
+        
+        dog.updateMe();
         stage.update();
     }
 
@@ -71,6 +84,7 @@
         stage.on("allAssetsLoaded", onReady);
         // load the assets
         assetManager.loadAssets(manifest);
+        gamePhase = 0;
     }
 
     main();

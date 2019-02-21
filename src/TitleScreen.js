@@ -36,19 +36,21 @@ class TitleScreen {
         this.bar.x = 600;
         this.bar.y = 200;
         this._stage.addChildAt(this.bar,3);
-        this._stage.on("click", this.kill);
+        
     }
     titleSlide() {
         if (this.duck.x <= 550) {
             this.duck.mover.update();
         } else if (this.hunt.x >= 650) {
             this.hunt.mover.update();
+        } else {
+            // put this in here so you can't start the game until the title screen is ready!
+            this._stage.on("click", () => this._stage.dispatchEvent(this._eventStartGame));
         }
     }
     kill(e) {
-        // this.stage.removeAllChildren();
-        console.log(e);
-        e.remove();
-        this.dispatchEvent(this._eventStartGame);
+        // console.log(e);
+        // e.remove();
+        this.stage.dispatchEvent(this._eventStartGame);
     }
 }

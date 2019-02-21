@@ -39,7 +39,7 @@ class MoverDiagonal {
             // calculating X and Y displacement
             this._xDisplace = Math.cos(radians) * this._speed;
             this._yDisplace = Math.sin(radians) * this._speed;
-            this._sprite.play();
+            // this._sprite.play();
             this._moving = true;
         }
     }
