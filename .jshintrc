@@ -11,6 +11,10 @@
         "MoverDiagonal":false,
         "GameScreen":false,
         "TitleScreen":false,
-        "Dog":false
+        "Dog":false,
+        "Duck":false,
+        "GreenDuck":false,
+        "PurpleDuck":false,
+        "RedDuck":false
     }
 }

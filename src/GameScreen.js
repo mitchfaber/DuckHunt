@@ -3,7 +3,6 @@ class GameScreen {
     constructor(stage, assetManager) {
         this._stage = stage;
         this._assetManager = assetManager;
-        this._dog = new Dog(this._stage,this._assetManager);
         this._stage.setClearColor("#7ec0ee");
         this._txtScore = new createjs.BitmapText("000000", this._assetManager.getSpriteSheet("spritesheet"));
         this._txtScore.x = 960;
@@ -33,6 +32,18 @@ class GameScreen {
         this._shotTracker.gotoAndStop("shotTracker");
         this._shotTracker.x = 150;
         this._shotTracker.y = 550;
+        this._bullet = this._assetManager.getSprite("spritesheet");
+        this._bullet.gotoAndStop("bullet");
+        this._bullet.x = 150;
+        this._bullet.y = 550;
+        this._duckHit = this._assetManager.getSprite("spritesheet");
+        this._duckHit.gotoAndStop("duckHit");
+        this._duckHit.x = 150;
+        this._duckHit.y = 550;
+        this._noHit = this._assetManager.getSprite("spritesheet");
+        this._noHit.gotoAndStop("noHit");
+        this._noHit.x = 150;
+        this._noHit.y = 550;
         this._round = this._assetManager.getSprite("spritesheet");
         this._round.gotoAndStop("round");
         this._round.x = 600;
@@ -45,20 +56,13 @@ class GameScreen {
         this._stage.addChildAt(this._tree, 2);
         this._stage.addChildAt(this._round, 3);
         // this._stage.addChildAt(this._roundNum, 4);
-        // this._stage.addChildAt(this._scoreTracker, 5);
-        // this._stage.addChildAt(this._txtScore, 6);
-        // this._stage.addChildAt(this._hitTracker, 7);
-        // this._stage.addChildAt(this._shotTracker, 8);
         this._round.mover = new Mover(this._round,this._stage);
         // this._roundNum.mover = new Mover(this._roundNum,this._stage);
-        this._eventStart = new createjs.Event("start");
+        this._eventStart = new createjs.Event("start", true);
     }
 
     roundStart() {
-        
-        // this._dog = new Dog(this._stage, this._assetManager);
         if (this._round.y >= -60){
-            console.log("Round Starting!");
             this._round.mover.speed = 6;
             this._round.mover.direction = Mover.UP;
             this._round.mover.startMe();
@@ -67,13 +71,19 @@ class GameScreen {
             // this._roundNum.mover.startMe();
         } else if (this._round.y <= -60) {
             this._round.mover.speed = 0;
-            // this._dog.roundStart();
+            this._round.dispatchEvent(this._eventStart);
         }
         this._round.mover.update();
         
     }
 
-    updateMe() {
-        this._round.mover.update();
+    addGUI() {
+        this._stage.addChildAt(this._scoreTracker, 5);
+        this._stage.addChildAt(this._txtScore, 6);
+        this._stage.addChildAt(this._hitTracker, 7);
+        this._stage.addChildAt(this._shotTracker, 8);
+        // this._stage.addChildAt(this._bullet, 9);
+        // this._stage.addChildAt(this._duckHit, 10);
+        // this._stage.addChildAt(this._noHit, 11);
     }
 }

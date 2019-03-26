@@ -29,19 +29,28 @@
         // getting background sprite for stage
         titleScreen = new TitleScreen(stage, assetManager);
         dog = new Dog(stage, assetManager);
+        duck = new GreenDuck(stage, assetManager);
+        for (let i = 0; i<10;i++) {
+            if (roundNum == 1) {
+                console.log("looping " + i);
+                duckPool.push(new GreenDuck(stage, assetManager));
+            }
+            
+        }
+        
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
-        // onStart();
     }
 
     function setupGame() {
         gameScreen = new GameScreen(stage, assetManager);
+        
     }
 
-    function onStart(e) {
-        console.log("clicked!");
-        gameScreen.roundStart();
-        dog.setupMe();
+    function gameStart() {
+        duckPool.forEach(duck => {
+            duck.enterStage(600,600,Mover.UP);
+        });
     }
 
     function roundEnd() {
@@ -57,13 +66,24 @@
                 stage.removeAllChildren();
                 setupGame();
                 gamePhase = 1;
+                dog.jump(-100,340,-10,10);
             });
-        } else if (gamePhase == 1) {
+        } 
+        else if (gamePhase == 1) {
             gameScreen.roundStart();
+            stage.on("start", () => {
+                gamePhase = 2;
+            });
+            
+        } else if (gamePhase == 2) {
+            dog.updateMe();
         }
-        
-        
-        dog.updateMe();
+        stage.on("dogGone", (e) => {
+            gameScreen.addGUI();
+            gameStart();
+            e.remove();
+            
+        });
         stage.update();
     }
 

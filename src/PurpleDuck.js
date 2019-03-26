@@ -1,8 +1,7 @@
-class Duck {
+class PurpleDuck extends Duck {
 
     constructor(stage, assetManager) {
         
     }
-
 
 }
