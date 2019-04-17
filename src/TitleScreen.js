@@ -38,7 +38,7 @@ class TitleScreen {
         this._stage.addChildAt(this.bar,3);
         
     }
-    titleSlide() {
+    updateMe() {
         if (this.duck.x <= 550) {
             this.duck.mover.update();
         } else if (this.hunt.x >= 650) {
@@ -47,10 +47,5 @@ class TitleScreen {
             // put this in here so you can't start the game until the title screen is ready!
             this._stage.on("click", () => this._stage.dispatchEvent(this._eventStartGame));
         }
-    }
-    kill(e) {
-        // console.log(e);
-        // e.remove();
-        this.stage.dispatchEvent(this._eventStartGame);
     }
 }

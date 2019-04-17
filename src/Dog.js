@@ -36,7 +36,6 @@ class Dog {
     jump(myX, myY, myRotate, mySpeed) {
         this._sprite = this._assetManager.getSprite("spritesheet");
         this._sprite.gotoAndStop("dogJump");
-        // console.log(myX);
         this._sprite.x = myX;
         this._sprite.y = myY;
         this._stage.addChild(this._sprite);
@@ -65,7 +64,6 @@ class Dog {
 
         // after the dog lands, change gamephase to 2, and do this...
         if (this._gamePhase == 2) {
-            let flag;
             this._sprite.gotoAndStop("dogJump");
             this._sprite.rotation = -30;
             this._sprite.mover.startMe();
@@ -75,8 +73,7 @@ class Dog {
                 console.log("go down!");
                 this._sprite.rotation = 50;
                 this._sprite.mover.startMe();
-                // trying to set dog to be behind grass, so he jumps over it....
-                this._stage.setChildIndex( this._sprite, 0);
+                this._stage.setChildIndex( this._sprite, 1);
             } else if (this._sprite.y >= 500) {
                 this._sprite.dispatchEvent(this._dogDone);
                 this._stage.removeChild(this._sprite);

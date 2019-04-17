@@ -3,8 +3,13 @@ class GameScreen {
     constructor(stage, assetManager) {
         this._stage = stage;
         this._assetManager = assetManager;
-        this._stage.setClearColor("#7ec0ee");
-        this._txtScore = new createjs.BitmapText("000000", this._assetManager.getSpriteSheet("spritesheet"));
+        let background = new createjs.Shape();
+        background.graphics.beginFill("#7ec0ee").drawRect(0, 0, 1200, 650);
+        background.cache(0,0,1200,650);
+        // this._stage.setClearColor("#7ec0ee");
+        this._stage.addChildAt(background,0);
+        this._newScore = 0;
+        this._txtScore = new createjs.BitmapText("0", this._assetManager.getSpriteSheet("spritesheet"));
         this._txtScore.x = 960;
         this._txtScore.y = 535;
         this._txtScore.letterSpacing = -4;
@@ -32,16 +37,12 @@ class GameScreen {
         this._shotTracker.gotoAndStop("shotTracker");
         this._shotTracker.x = 150;
         this._shotTracker.y = 550;
-        this._bullet = this._assetManager.getSprite("spritesheet");
-        this._bullet.gotoAndStop("bullet");
-        this._bullet.x = 150;
-        this._bullet.y = 550;
         this._duckHit = this._assetManager.getSprite("spritesheet");
         this._duckHit.gotoAndStop("duckHit");
         this._duckHit.x = 150;
         this._duckHit.y = 550;
         this._noHit = this._assetManager.getSprite("spritesheet");
-        this._noHit.gotoAndStop("noHit");
+        this._noHit.gotoAndStop("notHit");
         this._noHit.x = 150;
         this._noHit.y = 550;
         this._round = this._assetManager.getSprite("spritesheet");
@@ -51,14 +52,21 @@ class GameScreen {
         this._roundNum = new createjs.BitmapText("1", this._assetManager.getSpriteSheet("spritesheet"));
         this._roundNum.x = 655;
         this._roundNum.y = 450;
-        this._stage.addChildAt(this._ground, 0);
-        this._stage.addChildAt(this._grass, 1);
-        this._stage.addChildAt(this._tree, 2);
-        this._stage.addChildAt(this._round, 3);
-        // this._stage.addChildAt(this._roundNum, 4);
+        this._stage.addChildAt(this._ground, 1);
+        this._stage.addChildAt(this._grass, 2);
+        this._stage.addChildAt(this._tree, 3);
+        this._stage.addChildAt(this._round, 4);
+        // this._stage.addChildAt(this._roundNum, 5);
         this._round.mover = new Mover(this._round,this._stage);
         // this._roundNum.mover = new Mover(this._roundNum,this._stage);
         this._eventStart = new createjs.Event("start", true);
+        this._eventShot = new createjs.Event("shotFired", true);
+        
+        background.on("click", (e) =>background.dispatchEvent(this._eventShot));
+        this._ground.on("click", (e) =>background.dispatchEvent(this._eventShot));
+        this._grass.on("click", (e) =>background.dispatchEvent(this._eventShot));
+        this._tree.on("click", (e) =>background.dispatchEvent(this._eventShot));
+        
     }
 
     roundStart() {
@@ -74,16 +82,29 @@ class GameScreen {
             this._round.dispatchEvent(this._eventStart);
         }
         this._round.mover.update();
-        
     }
 
-    addGUI() {
+    flyAway() {
+        this._stage.setClearColor("#ffffff");
+    }
+
+    addGUI(shots) {
         this._stage.addChildAt(this._scoreTracker, 5);
         this._stage.addChildAt(this._txtScore, 6);
         this._stage.addChildAt(this._hitTracker, 7);
         this._stage.addChildAt(this._shotTracker, 8);
-        // this._stage.addChildAt(this._bullet, 9);
-        // this._stage.addChildAt(this._duckHit, 10);
-        // this._stage.addChildAt(this._noHit, 11);
+        let index = 9;
+        for (let i=0;i<shots.length; i++) {
+            shots[i].add(index); 
+            index++;
+        }
+        this._stage.addChildAt(this._duckHit, 12);
+        this._stage.addChildAt(this._noHit, 13);
+    }
+
+    updateGUI(score="100", hit="missed") {
+        this._newScore += parseInt(score);
+        console.log(String(this._newScore));
+        this._txtScore.text = String(this._newScore);
     }
 }
