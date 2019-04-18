@@ -1,8 +1,9 @@
 class GameScreen {
     
-    constructor(stage, assetManager) {
+    constructor(stage, assetManager, gamePhase) {
         this._stage = stage;
         this._assetManager = assetManager;
+        this._gamePhase = gamePhase;
         let background = new createjs.Shape();
         background.graphics.beginFill("#7ec0ee").drawRect(0, 0, 1200, 650);
         background.cache(0,0,1200,650);
@@ -37,14 +38,6 @@ class GameScreen {
         this._shotTracker.gotoAndStop("shotTracker");
         this._shotTracker.x = 150;
         this._shotTracker.y = 550;
-        this._duckHit = this._assetManager.getSprite("spritesheet");
-        this._duckHit.gotoAndStop("duckHit");
-        this._duckHit.x = 150;
-        this._duckHit.y = 550;
-        this._noHit = this._assetManager.getSprite("spritesheet");
-        this._noHit.gotoAndStop("notHit");
-        this._noHit.x = 150;
-        this._noHit.y = 550;
         this._round = this._assetManager.getSprite("spritesheet");
         this._round.gotoAndStop("round");
         this._round.x = 600;
@@ -61,11 +54,13 @@ class GameScreen {
         // this._roundNum.mover = new Mover(this._roundNum,this._stage);
         this._eventStart = new createjs.Event("start", true);
         this._eventShot = new createjs.Event("shotFired", true);
+        this._stage.on("dogGone", () => {
+            background.on("click", (e) =>background.dispatchEvent(this._eventShot));
+            this._ground.on("click", (e) =>background.dispatchEvent(this._eventShot));
+            this._grass.on("click", (e) =>background.dispatchEvent(this._eventShot));
+            this._tree.on("click", (e) =>background.dispatchEvent(this._eventShot));
+        });
         
-        background.on("click", (e) =>background.dispatchEvent(this._eventShot));
-        this._ground.on("click", (e) =>background.dispatchEvent(this._eventShot));
-        this._grass.on("click", (e) =>background.dispatchEvent(this._eventShot));
-        this._tree.on("click", (e) =>background.dispatchEvent(this._eventShot));
         
     }
 
@@ -88,7 +83,7 @@ class GameScreen {
         this._stage.setClearColor("#ffffff");
     }
 
-    addGUI(shots) {
+    addGUI(shots, waves) {
         this._stage.addChildAt(this._scoreTracker, 5);
         this._stage.addChildAt(this._txtScore, 6);
         this._stage.addChildAt(this._hitTracker, 7);
@@ -98,11 +93,12 @@ class GameScreen {
             shots[i].add(index); 
             index++;
         }
-        this._stage.addChildAt(this._duckHit, 12);
-        this._stage.addChildAt(this._noHit, 13);
+        for (let i=0;i<waves.length; i++) {
+            waves[i].add(13);
+        }
     }
 
-    updateGUI(score="100", hit="missed") {
+    updateScore(score="100", hit="missed") {
         this._newScore += parseInt(score);
         console.log(String(this._newScore));
         this._txtScore.text = String(this._newScore);

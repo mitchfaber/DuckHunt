@@ -13,7 +13,7 @@ class TitleScreen {
 
         this.duck = this._assetManager.getSprite("spritesheet");
         this.duck.gotoAndPlay("duck");
-        this.duck.x = -130;
+        this.duck.x = -135;
         this.duck.y = 150;
         this._stage.addChildAt(this.duck,1);
         this.duck.mover = new Mover(this.duck, this._stage);
@@ -23,7 +23,7 @@ class TitleScreen {
 
         this.hunt = this._assetManager.getSprite("spritesheet");
         this.hunt.gotoAndPlay("hunt");
-        this.hunt.x = 1330;
+        this.hunt.x = 1345;
         this.hunt.y = 250;
         this._stage.addChildAt(this.hunt,2);
         this.hunt.mover = new Mover(this.hunt, this._stage);
