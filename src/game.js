@@ -7,6 +7,7 @@
 
     // a pool of preloaded ducks to come out
     let duckPool = [];
+    let duckCount = 2;
 
     // ammo pool
     let shots = [];
@@ -16,10 +17,6 @@
 
     // current wave number
     let waveNum = 0;
-
-    // events
-    let eventWaveEnd;
-    let eventAmmoGone;
 
     // are there any ducks left?
     let ducksLeft = true;
@@ -39,6 +36,11 @@
     // dog variable
     let dog;
 
+    // ammo gone event
+    let eventAmmoGone;
+    let eventWaveEnd;
+    let eventDucksGone;
+
     // what gamePhase are we in?
     // 0 - doing nothing, title screen showing.
     // 1 - title screen gone, game setup.
@@ -53,10 +55,10 @@
         
         // adding duck icons to array and displaying them for each wave.
         // x makes each duck icon the same space apart.
-        let x = 436;
-        for (let i=0;i<9;i++) {
+        let x = 405;
+        for (let i=0;i<10;i++) {
             waves.push(new Hit(stage, assetManager,x,540));
-            x = x+40;
+            x = x+45;
         }
         
         // getting background sprite for stage
@@ -64,19 +66,15 @@
 
         // Creating dog object
         dog = new Dog(stage, assetManager);
-        for (let i = 0; i<2;i++) {
-            if (roundNum == 1) {
-                duckPool.push(new GreenDuck(stage, assetManager, 5));
-            }
-        }
-        
-
 
         createjs.Ticker.framerate = FRAME_RATE;
         createjs.Ticker.on("tick", onTick);
 
-        //---------------------------------------------------- EVENT LISTENERS 
 
+        // creating event for ammo gone
+        eventAmmoGone = new createjs.Event("ammoGone", true);
+        eventWaveEnd = new createjs.Event("waveEnd", true);
+        eventDucksGone = new createjs.Event("ducksGone", true);
         // starting setup, removed title screen
         stage.on("startGame", (e) => {
             stage.removeAllChildren();
@@ -86,93 +84,131 @@
         });
 
         // starting dog jumping in.
-        stage.on("start", (e) => {
-            dog.jump(-100,340,-10,10);
-            gamePhase = 2;
-            e.remove();
-        });
+        stage.on("start", onRoundStart);
 
         // once dog has landed, change phase so he knows to jump into the grass.
-        stage.on("dogLand", (e) => {
-            gamePhase = 3;
-            e.remove();
-        });
+        stage.on("dogLand", onDogLand);
 
         // once dog is gone, he dispatches an event so the GUI can become visible,
         // and this also starts the wave.
-        stage.on("dogGone", (e) => {
-            gamePhase = 4;
-            waveStart();
-            e.remove();
-        });
+        stage.on("dogGone", onWaveStart);
+
+        stage.on("duckDie", onDuckKill);
 
         // if the duck is shot, this updates all related GUI.
-        stage.on("duckDie", (e) => {
-            gameScreen.updateScore();
-        });
-
-        // every time the screen is clicked during gamePhase 4, this gets dispatched
-        stage.on("shotFired", (e) => {
-
-            if (shots.length > 1) {
-                shots.pop().update();
-            } else if (shots.length > 0){
-                shots.pop().update();
-                stage.dispatchEvent(eventAmmoGone);
-            }
-            // Can't remove e, or else this will only send for one click
-            // e.remove();
-        });
-
-        // if the ammo is gone, this event is run to check if they 
-        // had a good or bad wave.
-        stage.on("ammoGone", (e) => {
-            if (ducksLeft) {
-                dog.enterLaugh();
-            }
-            stage.dispatchEvent(eventWaveEnd);
-
-            e.remove();
-        });
-
-        // at the end of a wave, change gamePhase to stop duck icon from flashing,
-        // as well as increasing waveNum.
-        stage.on("waveEnd", (e) => {
-            console.log("Wave end");
-            gamePhase = 4;
-            waves[waveNum]._sprite.stop();
-            waveNum++;
-            e.remove();
-        });
-
-        // starting next wave after the dog finishes laughing.
-        stage.on("laughDone", (e) => {
-            console.log("Laugh done");
-            waveStart();
-            e.remove();
-        });
         
+
+        // every time the screen is clicked during gamePhase 3, this gets dispatched
+        stage.on("shotFired", (e) => {
+            if (gamePhase == 3) {
+                if (shots.length > 1) {
+                    shots.pop().update();
+                } else if (shots.length > 0){
+                    shots.pop().update();
+                    stage.dispatchEvent(eventAmmoGone);
+                }
+            }
+        });
     }
 
     function setupGame() {
         gameScreen = new GameScreen(stage, assetManager, gamePhase);
     }
 
-    function waveStart() {
-        // setting up events.
-        eventAmmoGone = new createjs.Event("ammoGone", true);
-        eventWaveEnd = new createjs.Event("waveEnd", true);
-
+    function reset() {
+        duckCount = 2;
+        shots.forEach(shot => {
+            stage.removeChild(shot._sprite);
+        });
+        shots = [];
+        duckPool = [];
+        for (let i = 0; i<2;i++) {
+            if (duckPool.length < 2) {
+                duckPool.push(new GreenDuck(stage, assetManager));
+            }
+        }
+        stage.on("waveEnd", onWaveEnd);
+        
+        stage.on("laughDone", onLaughDone);
+        stage.on("ammoGone", onAmmoGone);
+        stage.on("ducksGone", onAmmoGone);
         duckPool.forEach(duck => {
             duck.enterStage(600,600);
         });
         // Adding ammo to array.
-        shots.push(new Shot(stage, assetManager, 100,540));
-        shots.push(new Shot(stage, assetManager, 140,540));
-        shots.push(new Shot(stage, assetManager, 180,540));
+        if (shots.length < 2) {
+            shots.push(new Shot(stage, assetManager, 100,540));
+            shots.push(new Shot(stage, assetManager, 140,540));
+            shots.push(new Shot(stage, assetManager, 180,540));
+        }
         gameScreen.addGUI(shots, waves);
-
+        duckPool.forEach(duck => {
+            duck.startMe(0);
+        });
         gamePhase = 3;
+    }
+
+    // --------------------------------------------------------------- EVENT HANDLERS
+
+    function onDuckKill(e) {
+        console.log("duck Die");
+        gameScreen.updateScore();
+        duckPool.pop();
+        duckCount--;
+        console.log(duckPool.length);
+        if (duckCount == 0) {
+            stage.dispatchEvent(eventDucksGone);
+        }
+        // e.remove();
+    }
+
+    function onAmmoGone(e) {
+        if (duckCount >= 1) {
+            dog.enterLaugh();
+            console.log(waves[0]);
+            waves[waveNum].badWave();
+            if (duckCount == 1) {
+                dog.oneDuck(1);
+            }
+        } else if(duckCount == 0) {
+            waves[waveNum].goodWave();
+            dog.oneDuck(2);
+        }
+        stage.dispatchEvent(eventWaveEnd);
+        e.remove();
+    }
+
+    function onLaughDone(e) {
+        stage.removeChild(dog);
+        reset();
+        e.remove();
+    }
+
+    function onWaveStart(e) {
+        gamePhase = 4;
+        reset();
+        e.remove();
+    }
+
+    function onWaveEnd(e) {
+        e.remove();
+        duckPool.forEach(duck => {
+            duck.remove();
+        });
+        duckPool = [];
+        gamePhase = 4;
+        waveNum++;
+    }
+
+    function onDogLand(e) {
+        gamePhase = 3;
+        e.remove();
+    }
+
+    function onRoundStart(e) {
+        dog.jump(-100,340,-10,10);
+        gamePhase = 2;
+        e.remove();
     }
 
     function onTick(e) {
@@ -180,17 +216,15 @@
         titleScreen.updateMe();
         if (gamePhase == 1){
             gameScreen.roundStart();
-        } 
-        if (gamePhase == 3) {
-            waves[waveNum].flash();
         }
         duckPool.forEach(duck => {
-            duck.updateMe();
+            duck.update();
         });
         dog.updateMe(gamePhase);
         stage.update();
     }
 
+    // ---------------------------------------------------------- MAIN FUNCTION
     function main() {
         console.log(">> initializing");
         

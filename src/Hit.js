@@ -13,15 +13,10 @@ class Hit {
     }
 
     goodWave() {
-        
+        this._sprite.gotoAndStop("duckHit");
     }
 
     badWave() {
-        this._sprite = this._assetManager.getSprite("spritesheet");
         this._sprite.gotoAndStop("notHit");
-    }
-
-    flash() {
-        this._sprite.gotoAndPlay("notHit");
     }
 }

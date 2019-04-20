@@ -54,11 +54,12 @@ class GameScreen {
         // this._roundNum.mover = new Mover(this._roundNum,this._stage);
         this._eventStart = new createjs.Event("start", true);
         this._eventShot = new createjs.Event("shotFired", true);
-        this._stage.on("dogGone", () => {
+        this._stage.on("dogGone", (e) => {
             background.on("click", (e) =>background.dispatchEvent(this._eventShot));
             this._ground.on("click", (e) =>background.dispatchEvent(this._eventShot));
             this._grass.on("click", (e) =>background.dispatchEvent(this._eventShot));
             this._tree.on("click", (e) =>background.dispatchEvent(this._eventShot));
+            e.remove();
         });
         
         
@@ -84,23 +85,31 @@ class GameScreen {
     }
 
     addGUI(shots, waves) {
-        this._stage.addChildAt(this._scoreTracker, 5);
-        this._stage.addChildAt(this._txtScore, 6);
-        this._stage.addChildAt(this._hitTracker, 7);
-        this._stage.addChildAt(this._shotTracker, 8);
-        let index = 9;
+        if (this._stage.numChildren <= 10) {
+            console.log("Adding GUI");
+            this._stage.addChildAt(this._scoreTracker, 5);
+            this._stage.addChildAt(this._txtScore, 6);
+            this._stage.addChildAt(this._hitTracker, 7);
+            this._stage.addChildAt(this._shotTracker, 8);
+        }
+        this._reset(shots,waves);
+        
+    }
+
+    updateScore(score="100") {
+        this._newScore += parseInt(score);
+        console.log(String(this._newScore));
+        this._txtScore.text = String(this._newScore);
+    }
+
+    // ------------------------------------------------------ PRIVATE FUNCTIONS
+    _reset(shots, waves) {
+        let index = this._stage.numChildren;
         for (let i=0;i<shots.length; i++) {
-            shots[i].add(index); 
-            index++;
+            shots[i].add(index);
         }
         for (let i=0;i<waves.length; i++) {
             waves[i].add(13);
         }
-    }
-
-    updateScore(score="100", hit="missed") {
-        this._newScore += parseInt(score);
-        console.log(String(this._newScore));
-        this._txtScore.text = String(this._newScore);
     }
 }

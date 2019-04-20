@@ -23,6 +23,18 @@ class Dog {
         this._sprite.mover.startMe();
     }
 
+    oneDuck(howMany) {
+        this._sprite = this._assetManager.getSprite("spritesheet");
+        this._sprite.gotoAndStop("dogHold" + howMany);
+        this._sprite.y = 500;
+        this._sprite.x = 600;
+        this._stage.addChildAt(this._sprite,1);
+        this._sprite.mover = new Mover(this._sprite, this._stage);
+        this._sprite.mover.speed = 4;
+        this._sprite.mover.direction = Mover.UP;
+        this._sprite.mover.startMe();
+    }
+
     jump(myX, myY, myRotate, mySpeed) {
         this._sprite = this._assetManager.getSprite("spritesheet");
         this._sprite.gotoAndStop("dogJump");
