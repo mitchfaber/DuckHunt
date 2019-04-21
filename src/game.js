@@ -133,7 +133,8 @@
         stage.on("ammoGone", onAmmoGone);
         stage.on("ducksGone", onAmmoGone);
         duckPool.forEach(duck => {
-            duck.enterStage(600,600);
+            duck.enterStage(600,300);
+            console.log(duckPool.length);
         });
         // Adding ammo to array.
         if (shots.length < 2) {
@@ -142,9 +143,6 @@
             shots.push(new Shot(stage, assetManager, 180,540));
         }
         gameScreen.addGUI(shots, waves);
-        duckPool.forEach(duck => {
-            duck.startMe(0);
-        });
         gamePhase = 3;
     }
 
@@ -186,7 +184,13 @@
 
     function onWaveStart(e) {
         gamePhase = 4;
+        console.log("wave start");
         reset();
+        let test = 100;
+        duckPool.forEach(duck => {
+            duck.startMe(test);
+            test = test + 100;
+        });
         e.remove();
     }
 
@@ -207,6 +211,7 @@
 
     function onRoundStart(e) {
         dog.jump(-100,340,-10,10);
+        
         gamePhase = 2;
         e.remove();
     }
