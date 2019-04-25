@@ -13,7 +13,7 @@ class Dog {
 
     enterLaugh() {
         this._sprite = this._assetManager.getSprite("spritesheet");
-        this._sprite.gotoAndStop("laughing");
+        this._sprite.gotoAndPlay("laughing");
         this._sprite.y = 500;
         this._sprite.x = 600;
         this._stage.addChildAt(this._sprite,1);
@@ -23,7 +23,7 @@ class Dog {
         this._sprite.mover.startMe();
     }
 
-    oneDuck(howMany) {
+    duckHit(howMany) {
         this._sprite = this._assetManager.getSprite("spritesheet");
         this._sprite.gotoAndStop("dogHold" + howMany);
         this._sprite.y = 500;
@@ -84,7 +84,6 @@ class Dog {
             }
         }
 
-        //this block is for the round ending if they missed a duck...
         if (gamePhase == 4) {
             if (this._sprite.y >= 300) {
                 this._sprite.mover.update();
@@ -101,12 +100,6 @@ class Dog {
                 this._stage.removeChild(this._sprite);
                 this._stage.dispatchEvent(this._laughDone);
             }
-            
-            
         }
-
-        // this block of code is for the round ending if they got every duck...
-
-        
     }
 }

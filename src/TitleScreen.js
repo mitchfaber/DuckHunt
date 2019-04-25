@@ -7,8 +7,6 @@ class TitleScreen {
         background.graphics.beginFill("#000000").drawRect(0, 0, 1200, 650);
         background.cache(0,0,1200,650);
         this._eventStartGame = new createjs.Event("startGame", true);
-        
-
         this._stage.addChildAt(background,0);
 
         this.duck = this._assetManager.getSprite("spritesheet");

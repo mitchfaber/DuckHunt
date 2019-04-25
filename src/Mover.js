@@ -11,7 +11,7 @@ class Mover {
         this._stage = stage;
 
         // sprite not animating on construction
-        sprite.stop();
+        // sprite.stop();
     }
     
     // --------------------------------------------------- get/set methods
@@ -35,12 +35,12 @@ class Mover {
     
     // --------------------------------------------------- public methods
     startMe() {
-        this._sprite.play();
+        // this._sprite.play();
         this._moving = true;
     }
 
     stopMe() {
-        this._sprite.stop();
+        // this._sprite.stop();
         this._moving = false;
     }
 

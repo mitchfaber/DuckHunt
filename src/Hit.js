@@ -12,6 +12,10 @@ class Hit {
         this._stage.addChildAt(this._sprite, index);
     }
 
+    reset() {
+        this._sprite.gotoAndStop("notHit");
+    }
+
     goodWave() {
         this._sprite.gotoAndStop("duckHit");
     }
