@@ -67,12 +67,12 @@ class Duck {
     flyAway() {
         if (!this._shot) {
             this._flyAway = true;
-            this._sprite.stop();
+            this.stopMe();
             let radians = this._radianMe(-100);
             // calculating X and Y displacement
             this._xDisplace = Math.cos(radians) * this._speed;
             this._yDisplace = Math.sin(radians) * this._speed;
-            this._sprite.play();
+            this.startMe();
         }
         
     }
@@ -98,7 +98,6 @@ class Duck {
             } else if (!this._shot && this._direction >= -180) {
                 this._sprite.gotoAndStop(this.left);
             }
-
 
             let radians = this._radianMe(this._direction);
             // calculating X and Y displacement
@@ -145,6 +144,9 @@ class Duck {
                     }
                     this.startMe();
                 }
+            }
+            if (this._flyAway) {
+                this._direction = this._randomMe(-100,-100);
             }
 
 
