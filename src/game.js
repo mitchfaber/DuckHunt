@@ -199,7 +199,6 @@
     function onRoundEnd(e) {
         if(duck1) duck1.remove();
         if(duck2) duck2.remove();
-        roundNum++;
         if (hits >= 20) {
             if (roundNum >= 1 && roundNum <= 10) {
                 perfect = 10000;
@@ -224,6 +223,7 @@
         } else if (roundNum > 19 && hits < 10) {
             gameOver();
         } else {
+            roundNum++;
             ducksHit = 0;
             duckCount = 0;
             waveNum = 0;
@@ -232,7 +232,6 @@
                 wave.reset();
             });
             reset();
-            // gameScreen.addGUI(shots,waves);
         }
         e.remove();
     }
@@ -281,6 +280,8 @@
 
     function onLaughDone(e) {
         stage.removeChild(dog);
+        if(duck1) duck1.remove();
+        if(duck2) duck2.remove();
         reset();
         e.remove();
     }
@@ -300,7 +301,6 @@
         if (waveNum >= 9) {
             stage.dispatchEvent(eventRoundEnd);
             console.log("ROUND " + roundNum);
-            e.remove();
         }
         waveNum++;
         e.remove();
